@@ -1,0 +1,15 @@
+variable "aws_region" {
+  default = "ap-south-1"
+}
+
+variable "key_name" {
+  default = "may"
+}
+
+variable "db_username" {
+  default = "admin"
+}
+
+variable "db_password" {
+  sensitive = true
+}
