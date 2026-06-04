@@ -1,10 +1,42 @@
-data "aws_iam_role" "ssm_role" {
-  name = "ec2-ssm-full-access"
+resource "aws_iam_role" "ec2_role" {
+
+  name = "backend-ec2-ssm-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = {
+    Name = "backend-ec2-ssm-role"
+  }
 }
+
+
+
+resource "aws_iam_role_policy_attachment" "ssm" {
+
+  role = aws_iam_role.ec2_role.name
+
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+
 
 resource "aws_iam_instance_profile" "ec2_profile" {
 
-  name = "ec2-ssm-full-access-profile"
+  name = "backend-instance-profile"
 
-  role = data.aws_iam_role.ssm_role.name
+  role = aws_iam_role.ec2_role.name
 }

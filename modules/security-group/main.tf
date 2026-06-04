@@ -30,26 +30,33 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
+locals {
+  ec2_ports = [80, 3000, 4200, 8080]
+}
 
 resource "aws_security_group" "ec2_sg" {
 
   name        = "ec2-sg"
   description = "Backend EC2 Security Group"
+  vpc_id      = var.vpc_id
 
-  vpc_id = var.vpc_id
+  dynamic "ingress" {
 
-  ingress {
+    for_each = local.ec2_ports
 
-    description = "HTTP from ALB"
+    content {
 
-    from_port = 80
-    to_port   = 80
+      description = "Port ${ingress.value} from ALB"
 
-    protocol = "tcp"
+      from_port = ingress.value
+      to_port   = ingress.value
 
-    security_groups = [
-      aws_security_group.alb_sg.id
-    ]
+      protocol = "tcp"
+
+      security_groups = [
+        aws_security_group.alb_sg.id
+      ]
+    }
   }
 
   ingress {
@@ -78,7 +85,6 @@ resource "aws_security_group" "ec2_sg" {
     Name = "ec2-sg"
   }
 }
-
 
 
 resource "aws_security_group" "rds_sg" {
