@@ -58,7 +58,7 @@ cat > /var/www/html/index.html <<EOF
 <html>
 <head><title>EC2 Info</title></head>
 <body>
-  <h1>Backend Server Running</h1>
+  <h1>Backend Server Running on Server</h1>
   <p><b>Instance ID:</b> $INSTANCE_ID</p>
   <p><b>Hostname:</b> $HOSTNAME</p>
   <p><b>Private IP:</b> $PRIVATE_IP</p>
